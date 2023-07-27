@@ -12,11 +12,11 @@ class Channel:
         self.__channel_id = channel_id
 
         youtube = Channel.get_service()
-        result = youtube.channels().list(id=self.get_channel_id, part="snippet, statistics").execute()
+        result = youtube.channels().list(id=self.channel_id, part="snippet, statistics").execute()
 
         self.title = result["items"][0]["snippet"]["title"]
         self.description = result["items"][0]["snippet"]["description"].split(":)")[0]
-        self.url = f"https://www.youtube.com/channel/{self.get_channel_id}"
+        self.url = f"https://www.youtube.com/channel/{channel_id}"
         self.subscriber_count = result["items"][0]["statistics"]["subscriberCount"]
         self.video_count = result["items"][0]["statistics"]["videoCount"]
         self.view_count = result["items"][0]["statistics"]["viewCount"]
@@ -31,30 +31,30 @@ class Channel:
         return int(self.subscriber_count) - int(other.subscriber_count)
 
     def __gt__(self, other):
-        return self.subscriber_count > other.subscriber_count
+        return int(self.subscriber_count) > int(other.subscriber_count)
 
     def __ge__(self, other):
-        return self.subscriber_count >= other.subscriber_count
+        return int(self.subscriber_count) >= int(other.subscriber_count)
 
     def __lt__(self, other):
-        return self.subscriber_count < other.subscriber_count
+        return int(self.subscriber_count) < int(other.subscriber_count)
 
     def __le__(self, other):
-        return self.subscriber_count <= other.subscriber_count
+        return int(self.subscriber_count) <= int(other.subscriber_count)
 
     def __eq__(self, other):
-        return self.subscriber_count == other.subscriber_count
+        return int(self.subscriber_count) == int(other.subscriber_count)
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
         api_key: str = os.getenv('API')
         youtube = build('youtube', 'v3', developerKey=api_key)
-        channel = youtube.channels().list(id=self.get_channel_id, part="snippet, statistics").execute()
+        channel = youtube.channels().list(id=self.channel_id, part="snippet, statistics").execute()
         channel = json.dumps(channel, indent=2, ensure_ascii=False)
         print(channel)
 
     @property
-    def get_channel_id(self):
+    def channel_id(self):
         return self.__channel_id
 
     @classmethod
@@ -70,7 +70,7 @@ class Channel:
         метод, сохраняющий в файл значения атрибутов экземпляра Channel
         """
         add_to_json = {
-            "channel_id": self.get_channel_id,
+            "channel_id": self.channel_id,
             "title": self.title,
             "description": self.description,
             "url": self.url,
