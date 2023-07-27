@@ -3,7 +3,7 @@ from src.channel import Channel
 
 class Video:
     """Класс для ютуб-видеоролика"""
-    def __int__(self, video_id: str):
+    def __init__(self, video_id: str):
         """
         Экземпляр инициализируется id видеоролика. Дальше все данные будут подтягиваться по API.
         """
